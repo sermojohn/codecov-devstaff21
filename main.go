@@ -1,19 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/sermojohn/codecov-devstaff21/greet"
+)
 
 func main() {
-	greet()
+	doGreet()
 }
 
-func greet() {
-	fmt.Printf("%s %s!\n", getGreeting(), getSubject())
-}
-
-func getGreeting() string {
-	return "hello"
-}
-
-func getSubject() string {
-	return "devstaff"
+func doGreet() {
+	greeter := greet.Greeter{}
+	fmt.Printf("%s %s!\n", greeter.GetGreeting(), greeter.GetSubject())
 }
