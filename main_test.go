@@ -6,11 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_doGreet(t *testing.T) {
+func Test_printGreeting(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		log logger
+		log       logger
+		isMorning bool
 	}
 	tests := []struct {
 		name       string
@@ -18,13 +19,14 @@ func Test_doGreet(t *testing.T) {
 		assertFunc func(*testing.T, *args)
 	}{
 		{
-			name: "successful greeting",
+			name: "successful generic greeting",
 			args: args{
-				log: &mockLogger{},
+				log:       &mockLogger{},
+				isMorning: false,
 			},
 			assertFunc: func(t *testing.T, a *args) {
 				assert.True(t, a.log.(*mockLogger).DidLog)
-				assert.Equal(t, a.log.(*mockLogger).GotFormat, "%s %s!\n")
+				assert.Equal(t, a.log.(*mockLogger).GotFormat, "%s, %s!\n")
 				assert.Equal(t, a.log.(*mockLogger).GotArgs, []interface{}{"hello", "devstaff"})
 			},
 		},
@@ -32,7 +34,7 @@ func Test_doGreet(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			printGreeting(tt.args.log)
+			printGreeting(tt.args.log, tt.args.isMorning)
 		})
 		tt.assertFunc(t, &tt.args)
 	}

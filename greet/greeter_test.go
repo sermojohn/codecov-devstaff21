@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestGreeter_GetGreeting(t *testing.T) {
+func TestGreeter_GetGeneralGreeting(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -20,8 +20,8 @@ func TestGreeter_GetGreeting(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.GetGreeting(); got != tt.want {
-				t.Errorf("Greeter.GetGreeting() = %v, want %v", got, tt.want)
+			if got := tt.g.GetGeneralGreeting(); got != tt.want {
+				t.Errorf("Greeter.GetGeneralGreeting() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -45,6 +45,29 @@ func TestGreeter_GetSubject(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.g.GetSubject(); got != tt.want {
 				t.Errorf("Greeter.GetSubject() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestGreeter_GetMorningGreeting(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		g    *Greeter
+		want string
+	}{
+		{
+			name: "morning greeting",
+			g:    &Greeter{},
+			want: "good morning",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.g.GetMorningGreeting(); got != tt.want {
+				t.Errorf("Greeter.GetMorningGreeting() = %v, want %v", got, tt.want)
 			}
 		})
 	}

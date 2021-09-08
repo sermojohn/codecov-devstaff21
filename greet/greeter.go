@@ -2,8 +2,12 @@ package greet
 
 type Greeter struct{}
 
-func (g *Greeter) GetGreeting() string {
+func (g *Greeter) GetGeneralGreeting() string {
 	return "hello"
+}
+
+func (g *Greeter) GetMorningGreeting() string {
+	return "good morning"
 }
 
 func (g *Greeter) GetSubject() string {

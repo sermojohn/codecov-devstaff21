@@ -13,16 +13,20 @@ func main() {
 		log = f.NewLogger()
 	)
 
-	printGreeting(log)
+	printGreeting(log, true)
 }
 
-func printGreeting(l logger) {
+func printGreeting(l logger, isMorning bool) {
 	var (
 		greeter  = &greet.Greeter{}
-		greeting = greeter.GetGreeting()
 		subject  = greeter.GetSubject()
+		greeting = greeter.GetGeneralGreeting()
 	)
-	l.Logf("%s %s!\n", greeting, subject)
+
+	if isMorning {
+		greeting = greeter.GetMorningGreeting()
+	}
+	l.Logf("%s, %s!\n", greeting, subject)
 }
 
 type logger interface {
