@@ -22,8 +22,7 @@ jobs:
         run: make test-cover
       - uses: codecov/codecov-action@v2.0.3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: ./${{ matrix.service }}/coverage.out # optional
+          files: ./coverage.out # optional
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
           # flags: unittests # optional
