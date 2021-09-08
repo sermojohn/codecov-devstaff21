@@ -1,24 +1,36 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/sermojohn/codecov-devstaff21/greet"
 	"github.com/sermojohn/codecov-devstaff21/log"
 )
 
 func main() {
-	logger := log.NewFmtLogger()
-	doGreet(logger)
+	var (
+		f   = &factory{}
+		log = f.NewLogger()
+	)
+
+	printGreeting(log)
 }
 
-func doGreet(logger Logger) {
+func printGreeting(l logger) {
 	var (
 		greeter  = &greet.Greeter{}
 		greeting = greeter.GetGreeting()
 		subject  = greeter.GetSubject()
 	)
-	logger.Printf("%s %s!\n", greeting, subject)
+	l.Logf("%s %s!\n", greeting, subject)
 }
 
-type Logger interface {
-	Printf(format string, a ...interface{}) (n int, err error)
+type logger interface {
+	Logf(format string, a ...interface{})
+}
+
+type factory struct{}
+
+func (f *factory) NewLogger() logger {
+	return &log.FmtLogger{PrintfFunc: fmt.Printf}
 }

@@ -1,37 +1,81 @@
 package log
 
-import "testing"
+import (
+	"errors"
+	"testing"
 
-func Test_fmtLogger_Printf(t *testing.T) {
+	"github.com/stretchr/testify/assert"
+)
+
+func Test_fmtLogger_Logf(t *testing.T) {
+	t.Parallel()
+
 	type fields struct {
-		printfFunc func(format string, a ...interface{}) (n int, err error)
+		fmtPrinter *mockFmtPrinter
 	}
 	type args struct {
 		format string
 		a      []interface{}
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantN   int
-		wantErr bool
+		name       string
+		fields     fields
+		args       args
+		wantN      int
+		wantErr    error
+		assertFunc func(*testing.T, *fields)
 	}{
-		// TODO: Add test cases.
+		{
+			name: "successful printf",
+			args: args{
+				format: "%s %s",
+				a:      []interface{}{"hello", "world"},
+			},
+			fields: fields{
+				fmtPrinter: &mockFmtPrinter{},
+			},
+			assertFunc: func(t *testing.T, f *fields) {
+				assert.True(t, f.fmtPrinter.DidPrint)
+			},
+		},
+		{
+			name: "failed printf",
+			args: args{
+				format: "%s %s",
+				a:      []interface{}{"hello", "world"},
+			},
+			fields: fields{
+				fmtPrinter: &mockFmtPrinter{PrintError: errors.New("printf error")},
+			},
+			wantErr: errors.New("printf error"),
+			assertFunc: func(t *testing.T, f *fields) {
+				assert.False(t, f.fmtPrinter.DidPrint)
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			f := &fmtLogger{
-				printfFunc: tt.fields.printfFunc,
+			f := &FmtLogger{
+				PrintfFunc: tt.fields.fmtPrinter.Printf,
 			}
-			gotN, err := f.Printf(tt.args.format, tt.args.a...)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("fmtLogger.Printf() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if gotN != tt.wantN {
-				t.Errorf("fmtLogger.Printf() = %v, want %v", gotN, tt.wantN)
+			f.Logf(tt.args.format, tt.args.a...)
+
+			if tt.assertFunc != nil {
+				tt.assertFunc(t, &tt.fields)
 			}
 		})
 	}
+}
+
+type mockFmtPrinter struct {
+	DidPrint   bool
+	PrintError error
+}
+
+func (m *mockFmtPrinter) Printf(format string, a ...interface{}) (n int, err error) {
+	if m.PrintError != nil {
+		return 0, m.PrintError
+	}
+	m.DidPrint = true
+	return 0, nil
 }
