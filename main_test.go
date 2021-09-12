@@ -31,6 +31,18 @@ func Test_printGreeting(t *testing.T) {
 				assert.Equal(t, a.log.(*mockLogger).GotArgs, []interface{}{"hello", "devstaff"})
 			},
 		},
+		{
+			name: "successful morning greeting",
+			args: args{
+				log:       &mockLogger{},
+				isMorning: true,
+			},
+			assertFunc: func(t *testing.T, a *args) {
+				assert.True(t, a.log.(*mockLogger).DidLog)
+				assert.Equal(t, a.log.(*mockLogger).GotFormat, "%s, %s!\n")
+				assert.Equal(t, a.log.(*mockLogger).GotArgs, []interface{}{"good morning", "devstaff"})
+			},
+		},
 	}
 
 	for _, tt := range tests {
