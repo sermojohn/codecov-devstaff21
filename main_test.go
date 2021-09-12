@@ -10,8 +10,9 @@ func Test_printGreeting(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		log       logger
-		isMorning bool
+		log        logger
+		isMorning  bool
+		isMidnight bool
 	}
 	tests := []struct {
 		name       string
@@ -34,7 +35,7 @@ func Test_printGreeting(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			printGreeting(tt.args.log, tt.args.isMorning)
+			printGreeting(tt.args.log, tt.args.isMorning, tt.args.isMidnight)
 		})
 		tt.assertFunc(t, &tt.args)
 	}
