@@ -10,8 +10,9 @@ func Test_printGreeting(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		log       logger
-		isMorning bool
+		log        logger
+		isMorning  bool
+		isMidnight bool
 	}
 	tests := []struct {
 		name       string
@@ -30,11 +31,23 @@ func Test_printGreeting(t *testing.T) {
 				assert.Equal(t, a.log.(*mockLogger).GotArgs, []interface{}{"hello", "devstaff"})
 			},
 		},
+		{
+			name: "successful morning greeting",
+			args: args{
+				log:       &mockLogger{},
+				isMorning: true,
+			},
+			assertFunc: func(t *testing.T, a *args) {
+				assert.True(t, a.log.(*mockLogger).DidLog)
+				assert.Equal(t, a.log.(*mockLogger).GotFormat, "%s, %s!\n")
+				assert.Equal(t, a.log.(*mockLogger).GotArgs, []interface{}{"good morning", "devstaff"})
+			},
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			printGreeting(tt.args.log, tt.args.isMorning)
+			printGreeting(tt.args.log, tt.args.isMorning, tt.args.isMidnight)
 		})
 		tt.assertFunc(t, &tt.args)
 	}
